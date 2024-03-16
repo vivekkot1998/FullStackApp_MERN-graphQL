@@ -1,6 +1,6 @@
 const Event = require('../../models/event');
 const { transformEvent } = require('./merge')
-
+const User = require('../../models/user')
 
 module.exports = {
     events: async () => {
@@ -23,7 +23,7 @@ module.exports = {
             description: args.eventInput.description,
             price: +args.eventInput.price,
             date: new Date( args.eventInput.date ),
-            creator: '65f4a4d220526894735c1d4e'
+            creator: req.userId
         });
 
         let createdEvent;
@@ -31,7 +31,7 @@ module.exports = {
         const result = await event
         .save()
             createdEvent = transformEvent(result);
-            const creator =await User.findById('65f4a4d220526894735c1d4e');
+            const creator =await User.findById(req.userId);
 
             if (!creator){
                 throw new Error('User exists already');
